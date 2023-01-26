@@ -15,7 +15,7 @@ library(ShinyItemAnalysis)
 library(bslib)
 
 #######UTILS###########################################################################
-tema <- bs_theme( bg= "white",fg = "black", primary = "tomato",
+tema <- bs_theme( bg= "white",fg = "navy ", primary = "tomato",
   base_font = font_google("Space Mono"),
   code_font = font_google("Space Mono")
 )
@@ -24,24 +24,31 @@ tema <- bs_theme( bg= "white",fg = "black", primary = "tomato",
 labelDifficulties<-function (itemDifficulties){
   difficultycommemnt <- c()
   for (difficulty in 1:length(itemDifficulties)){
-    if(itemDifficulties[difficulty] <= 0.2){difficultycommemnt[difficulty]<- "(3) Difficult" 
-    }else if(itemDifficulties[difficulty] > 0.2 & itemDifficulties[difficulty] < 0.8){difficultycommemnt[difficulty]<- "(2) Moderate"
-    }else{difficultycommemnt[difficulty]<- "(1) Easy"
+    if(itemDifficulties[difficulty] <= 0.2){difficultycommemnt[difficulty]<- "DIFFICULT" 
+    }else if(itemDifficulties[difficulty] > 0.2 & itemDifficulties[difficulty] < 0.8){difficultycommemnt[difficulty]<- " MEDIOCRE"
+    }else{difficultycommemnt[difficulty]<- "     EASY"
     }
   }
   return(difficultycommemnt)
 }
 
 
+percent_al<-function(df){
+  x<- vector("numeric", length=length(df))
+  for (i in 1:length(df))
+    x[i]<-round(df[i]/sum(df),3)
+  
+  return(x)
+}
 
 labelDiscriminations<- function(itemDiscriminations){
   discriminationcomment<-c()
   for (discrimination in 1:length(itemDiscriminations)) {
-    if(itemDiscriminations[discrimination] <= 0 | is.na(itemDiscriminations[discrimination] )  ){discriminationcomment[discrimination]<- "(5) DISCARD"
-    }else if(itemDiscriminations[discrimination] <= 0.2 & itemDiscriminations[discrimination] > 0){ discriminationcomment[discrimination]<- "(4) Needs Revision"
-    }else if(itemDiscriminations[discrimination] <= 0.3 & itemDiscriminations[discrimination] > 0.2){ discriminationcomment[discrimination]<- "(3) Mediocre"
-    }else if(itemDiscriminations[discrimination] <= 0.4 & itemDiscriminations[discrimination] > 0.3){ discriminationcomment[discrimination]<- "(2) Good"
-    }else if(itemDiscriminations[discrimination] > 0.4){ discriminationcomment[discrimination]<- "(1) Very Good"
+    if(itemDiscriminations[discrimination] <= 0 | is.na(itemDiscriminations[discrimination] )  ){discriminationcomment[discrimination]<-      "  DISCARD"
+    }else if(itemDiscriminations[discrimination] <= 0.2 & itemDiscriminations[discrimination] > 0){ discriminationcomment[discrimination]<-   "   REVISE"
+    }else if(itemDiscriminations[discrimination] <= 0.3 & itemDiscriminations[discrimination] > 0.2){ discriminationcomment[discrimination]<- "   MEDIUM"
+    }else if(itemDiscriminations[discrimination] <= 0.4 & itemDiscriminations[discrimination] > 0.3){ discriminationcomment[discrimination]<- "     GOOD"
+    }else if(itemDiscriminations[discrimination] > 0.4){ discriminationcomment[discrimination]<- "VERY GOOD"
     }
   }
   return(discriminationcomment)
@@ -302,18 +309,22 @@ main_function<- function ( datapath,
   difficulties<-round(colMeans(scored_respo),2)
   discriminations<-round(item.total(scored_respo)$Item.Total,2)
   
-  Discrimination_Labels<-labelDiscriminations(discriminations)
-  Difficulty_Labels<-labelDifficulties(difficulties)
+  DISC.LABELS<-labelDiscriminations(discriminations)
+  DIFF.LABELS<-labelDifficulties(difficulties)
   
   
-  item_stats<- cbind(difficulties, discriminations, Difficulty_Labels, Discrimination_Labels )
+  item_stats<- cbind(difficulties, discriminations, DIFF.LABELS, DISC.LABELS )
   colnames(item_stats)<- c("difficulty index", "discrimination index", "difficulty comment", "discrimination comment")
   
   
   
   #requested_output 7:TEST LEVEL ANALYSIS:
-  mytable<-table( Difficulty_Labels, Discrimination_Labels)
-  
+  mytable<-table( DIFF.LABELS, DISC.LABELS)
+  ....TOTAL<-colSums(mytable)
+  ..PERCENT<-round(percent_al(....TOTAL)*100)
+  mytable<-rbind(mytable,....TOTAL, ..PERCENT)
+  #...TOTAL<-rowSums(mytable)
+  # mytable<-cbind(mytable  , ...TOTAL     )
   
   
   #requested_output 3:TEST LEVEL ANALYSIS:
@@ -418,7 +429,7 @@ ui <- fluidPage(
                   ),
                   
                   mainPanel(
-                    titlePanel(tags$b(' Test Analyze-R ')),
+                    titlePanel(' Test Analyze-R '),
                     tags$p(
                       "This is an application developed specifically for obtaining test scores and for conducting elementary item analysis on test data 
                           which were scanned directly by optical mark recognition machines at TOBB ETÜ-DFL.
@@ -554,7 +565,7 @@ server <- function(input, output) {
     )
     datatable(
       data = exam_results,
-      caption = "First select 'show all rows'. Then click on 'excel' to download the results. ",
+      caption = "First select 'show all rows'. Then click on 'Excel' to download the results. ",
       extensions = c('Buttons'),
       options = list(
         dom = 'Bfrtip',
@@ -629,13 +640,14 @@ server <- function(input, output) {
     )
     datatable(
       data = item_stats,
+      caption = "First select 'show all rows'. Then click on 'Excel' to download the results. ",
       extensions = c('Buttons'),
       options = list(
         dom = 'Bfrtip',
         buttons = c('pageLength',  'excel'),
-        pagelength = 10,
-        lengthMenu = list(c(10, 20, 40, 70,-1),
-                          c('10', '20', '40', '70', 'All'))
+        pagelength = 5,
+        lengthMenu = list(c(5, 10, 20, 40, 70,-1),
+                          c('5', '10', '20', '40', '70', 'All'))
       )
     )
   })
