@@ -16,8 +16,8 @@ library(bslib)
 
 #######UTILS###########################################################################
 tema <- bs_theme( bg= "white",fg = "navy ", primary = "tomato",
-  base_font = font_google("Space Mono"),
-  code_font = font_google("Space Mono")
+                  base_font = font_google("Space Mono"),
+                  code_font = font_google("Space Mono")
 )
 
 #GÜÇLÜK AYIRTEDİCİLİK FONKSİYONLARI:
@@ -59,7 +59,10 @@ main_function<- function ( datapath,
                            a, b, c, d, 
                            x, y, z, w, 
                            requested_output=c(1:7),
-                           p_table=NULL){
+                           p_table=NULL)
+  #a, b, c, and d are item numbers of possible four parts.
+  #x, y, z, and w are respectively maximum points of possible four parts.
+{
   
   #N of items
   part1<-a
@@ -80,7 +83,7 @@ main_function<- function ( datapath,
   data <- as.data.frame(data[,-1])
   colnames(data) <- "v1"
   
-  #türkçe karakterleri dönüştür:
+  #conversion of turkish letters such as ü or ş etc.:
   data$v1 <- gsub('<dd>', 'I', data$v1)
   data$v1 <- gsub('<d6>', 'O', data$v1)
   data$v1 <- gsub('<de>', 'S', data$v1)
@@ -111,8 +114,6 @@ main_function<- function ( datapath,
     separate(colm, into = c("section", "colm"), sep = 6)
   data <- data %>%
     separate(colm, into = c("room_desk_id"), sep = 4)
-  
-  
   
   data <- data %>%
     separate(part_1, into = c("part_1"), sep = part1)
@@ -352,86 +353,86 @@ main_function<- function ( datapath,
 #shiny::runGitHub("dreamRs/fresh", subdir = "inst/examples/create")
 ui <- fluidPage(
   theme = tema,
-
   
-
-                sidebarLayout(
-                  sidebarPanel(
-                    width = 3,
-                    tags$a(href="https://www.etu.edu.tr/en/bolum/department-of-foreign-languages/duyuru/-", 
-                           tags$img(src='tobb_etu__logo_tr.png',
-                                    align="middle",    
-                                    height = "49px", 
-                                    style='padding-top: 1px')),
-                    
-                    tags$hr(),
-                    fileInput('file1', 'Upload your .dat file'),
-                    tags$b(
-                      "Please enter the number of items and maximum possible score for each part below."
-                    ),
-                    tags$br(),
-                    tags$br(),
-                    tags$p(
-                      tags$b(
-                        "If there are LESS THAN FOUR parts, please enter ZERO for both cells."
-                      )
-                    ),
-                    hr(),
-                    splitLayout(
-                      numericInput(
-                        inputId = 'part1',
-                        label = 'Part 1',
-                        value = 10
-                      ),
-                      numericInput(
-                        inputId = 'max_score_part1',
-                        label = 'Max:',
-                        value = 100
-                      )
-                    ),
-                    splitLayout(
-                      numericInput(
-                        inputId = 'part2',
-                        label = 'Part 2',
-                        value = 10
-                      ),
-                      numericInput(
-                        inputId = 'max_score_part2',
-                        label = 'Max:',
-                        value = 100
-                      )
-                    ),
-                    splitLayout(
-                      numericInput(
-                        inputId = 'part3',
-                        label = 'Part 3',
-                        value = 10
-                      ),
-                      numericInput(
-                        inputId = 'max_score_part3',
-                        label = 'Max:',
-                        value = 100
-                      )
-                    ),
-                    splitLayout(
-                      numericInput(
-                        inputId = 'part4',
-                        label = 'Part 4',
-                        value = 10
-                      ),
-                      numericInput(
-                        inputId = 'max_score_part4',
-                        label = 'Max:',
-                        value = 100
-                      )
-                    ),
-                    hr(),
-                  ),
-                  
-                  mainPanel(
-                    titlePanel(' Test Analyze-R '),
-                    tags$p(
-                      "This is an application developed specifically for obtaining test scores and for conducting elementary item analysis on test data 
+  
+  
+  sidebarLayout(
+    sidebarPanel(
+      width = 3,
+      tags$a(href="https://www.etu.edu.tr/en/bolum/department-of-foreign-languages/duyuru/-", 
+             tags$img(src='tobb_etu__logo_tr.png',
+                      align="middle",    
+                      height = "49px", 
+                      style='padding-top: 1px')),
+      
+      tags$hr(),
+      fileInput('file1', 'Upload your .dat file'),
+      tags$b(
+        "Please enter the number of items and maximum possible score for each part below."
+      ),
+      tags$br(),
+      tags$br(),
+      tags$p(
+        tags$b(
+          "If there are LESS THAN FOUR parts, please enter ZERO for both cells."
+        )
+      ),
+      hr(),
+      splitLayout(
+        numericInput(
+          inputId = 'part1',
+          label = 'Part 1',
+          value = 10
+        ),
+        numericInput(
+          inputId = 'max_score_part1',
+          label = 'Max:',
+          value = 100
+        )
+      ),
+      splitLayout(
+        numericInput(
+          inputId = 'part2',
+          label = 'Part 2',
+          value = 10
+        ),
+        numericInput(
+          inputId = 'max_score_part2',
+          label = 'Max:',
+          value = 100
+        )
+      ),
+      splitLayout(
+        numericInput(
+          inputId = 'part3',
+          label = 'Part 3',
+          value = 10
+        ),
+        numericInput(
+          inputId = 'max_score_part3',
+          label = 'Max:',
+          value = 100
+        )
+      ),
+      splitLayout(
+        numericInput(
+          inputId = 'part4',
+          label = 'Part 4',
+          value = 10
+        ),
+        numericInput(
+          inputId = 'max_score_part4',
+          label = 'Max:',
+          value = 100
+        )
+      ),
+      hr(),
+    ),
+    
+    mainPanel(
+      titlePanel(' Test Analyze-R '),
+      tags$p(
+        "This is an application developed specifically for obtaining test scores and for conducting elementary item analysis on test data 
                           which were scanned directly by optical mark recognition machines at TOBB ETÜ-DFL.
                           With this application, you can easily read .dat files, conduct item analysis, and generate detailed reports
                           to measure student performance and identify areas of improvement. 
@@ -439,111 +440,113 @@ ui <- fluidPage(
                           meaning; you do not need to click anywhere to get the output.
                           So, for optimum performance, enter your input into the cells (on the left) before you upload any files. 
                           Then, wait for a few seconds. Reload the page any time you upload a new file.", 
-                      tags$b("The only accepted file format is .dat.")),
-                    tags$p("You can download",tags$a(href="https://drive.google.com/file/d/1hVEldl2mKDec1NIcRhTKq00v_zPNp_mJ/view?usp=share_link",
-                                                     "a sample .dat file"), "in order to try the app (Keep the default input values for the sample)."),
-                    hr(),
-                    tabsetPanel(
-                      tabPanel(
-                        "Student Scores",
-                        hr(),
-                        tags$br(),
-                        dataTableOutput(outputId = 'table.output')
-                      ),
-                      tabPanel(
-                        "Test Statistics",
-                        hr(),
-                        tags$br(),
-                        tags$b("DESCRIPTIVE STATISTICS"),
-                        tags$p(
-                          "Descriptive statistics gives us an insight to our test and sample.
+        tags$b("The only accepted file format is .dat.")),
+      tags$p("You can download",tags$a(href="https://drive.google.com/file/d/1hVEldl2mKDec1NIcRhTKq00v_zPNp_mJ/view?usp=share_link",
+                                       "a sample .dat file"), "in order to try the app (Keep the default input values for the sample)."),
+      hr(),
+      tabsetPanel(
+        tabPanel(
+          "Student Scores",
+          hr(),
+          tags$br(),
+          dataTableOutput(outputId = 'table.output')
+        ),
+        tabPanel(
+          "Test Statistics",
+          hr(),
+          tags$br(),
+          tags$b("DESCRIPTIVE STATISTICS"),
+          tags$p(
+            "Descriptive statistics gives us an insight to our test and sample.
                         We investigate descriptives depending on the data's distribution."
-                        ),
-                        tags$b(" RELIABILITY"),
-                        tags$p(
-                          "Cronbach's α is an estimate of the internal consistency of a test. 
+          ),
+          tags$b(" RELIABILITY"),
+          tags$p(
+            "Cronbach's α is an estimate of the internal consistency of a test. 
                           The α index is between 0 and 1. The higher the better for educational tests."
-                        ),
-                        tags$b("VALIDITY"),
-                        tags$p("Test Analyze-R provides two types of output currently:"),
-                        tags$p(tags$b(" Scree Plot ")),
-                        tags$p(
-                          "A scree plot might give us a clue about the factors of the test.
+          ),
+          tags$b("VALIDITY"),
+          tags$p("Test Analyze-R provides two types of output currently:"),
+          tags$p(tags$b(" Scree Plot ")),
+          tags$p(
+            "A scree plot might give us a clue about the factors of the test.
                         In the screeplot, each dot/triangle located above the red line might indicate a factor.
                         If there are any items with zero variance (meaning: all students gave the same response to an item),
                         a scree plot will NOT be calculated. In that case, you might also use a correlation heat map (below) as a validity check."
-                        ),
-                        tags$b("Correlation Heat Map"),
-                        tags$p(
-                          "A correlation heat map displays the correlation between item pairs.
+          ),
+          tags$b("Correlation Heat Map"),
+          tags$p(
+            "A correlation heat map displays the correlation between item pairs.
                                  The color of circles indicates in which way the items are correlated-
                                  a blue color means possitive correlation and a red color means negative correlation.
                                  The diogonal will always be dark blue. Other than that, we do not want red or dark blue dots.
                                  Instead, LIGHT BLUE DOTS are expected output in this plot."
-                        ),
-                        hr(),
-                        verbatimTextOutput(outputId = "summary_stats"),
-                        hr(),
-                        verbatimTextOutput(outputId = "c.alpha"),
-                        hr(),
-                        plotOutput(
-                          outputId = "scree_plot",
-                          width = "100%",
-                          height = "400px"
-                        ),
-                        tags$br(),
-                        plotOutput(
-                          outputId = "cor_plot",
-                          width = "100%",
-                          height = "400px"
-                        ),
-                        
-                      ),
-                      tabPanel(
-                        "Item Statistics",
-                        hr(),
-                        tags$br(),
-                        tags$b("ITEM ANALYSIS"),
-                        tags$p(
-                          "Difficulty of an item is simply:  N of individuals with correct response / N of total group. That's why it is also called mean of the item."),
-                        tags$p(
-                          "Discrimination of an item, on the other hand, can be calculated with three different methods. 
+          ),
+          hr(),
+          verbatimTextOutput(outputId = "summary_stats"),
+          hr(),
+          verbatimTextOutput(outputId = "c.alpha"),
+          hr(),
+          plotOutput(
+            outputId = "scree_plot",
+            width = "100%",
+            height = "400px"
+          ),
+          tags$br(),
+          plotOutput(
+            outputId = "cor_plot",
+            width = "100%",
+            height = "400px"
+          ),
+          
+        ),
+        tabPanel(
+          "Item Statistics",
+          hr(),
+          tags$br(),
+          tags$b("ITEM ANALYSIS"),
+          tags$p(
+            "Difficulty of an item is simply:  N of individuals with correct response / N of total group. That's why it is also called mean of the item."),
+          tags$p(
+            "Discrimination of an item, on the other hand, can be calculated with three different methods. 
                           They are listed below and we use the second one in this app."),
-                        tags$p(tags$b("1."), "Correlation between the item and total score."),
-                        tags$p(tags$b("2."), "Correlation between the item and total score withhout the item."),
-                        tags$p(tags$b("3."), "The difference in item score in the upper and lower third of the respondents (Upper-Lower Index, ULI)."),
-                        dataTableOutput(outputId = 'item.anal')
-                      ),
-                      tabPanel(
-                        "Distractor Statistics",
-                        hr(),
-                        tags$br(),
-                        tags$b("DISTRACTOR ANALYSIS"),
-                        tags$p(
-                          "In this report, you will see a table for each item. 
+          tags$p(tags$b("1."), "Correlation between the item and total score."),
+          tags$p(tags$b("2."), "Correlation between the item and total score withhout the item."),
+          tags$p(tags$b("3."), "The difference in item score in the upper and lower third of the respondents (Upper-Lower Index, ULI)."),
+          tags$p("The Difficulty-Discrimination Plot below is a nice visualization of item properties."),
+          plotOutput( outputId = "DD_plot",   width = "100%",  height = "400px"),
+          dataTableOutput(outputId = 'item.anal')
+        ),
+        tabPanel(
+          "Distractor Statistics",
+          hr(),
+          tags$br(),
+          tags$b("DISTRACTOR ANALYSIS"),
+          tags$p(
+            "In this report, you will see a table for each item. 
                           In the columns, the test takers are divided into three subgroups according to their total scores."),
-                        tags$p(tags$b("Group 1"), "is the test takers with the lowest scores."),
-                        tags$p(tags$b("Group 3"), "is the test takers with the highest scores."),
-                        tags$p("In the rows, you will see numbers referring to options. 1-5 means A-E.
+          tags$p(tags$b("Group 1"), "is the test takers with the lowest scores."),
+          tags$p(tags$b("Group 3"), "is the test takers with the highest scores."),
+          tags$p("In the rows, you will see numbers referring to options. 1-5 means A-E.
                                If you don't see an option, it means it is not selected by any test takers."),
-                        radioButtons(inputId = "p_table", label = "Choose to swap:", 
-                                     choices = c("Counts", "Percentages"), selected = "Counts"),
-                    
-                        
-                         verbatimTextOutput(outputId = "distractor.anal")
-                      #  dataTableOutput(outputId = "distractor.anal")
-                      ),
-                      tabPanel(
-                        "Item Writer Report",
-                        hr(),
-                        tags$br(),
-                        verbatimTextOutput(outputId = "commenttable")
-                        #  dataTableOutput(outputId = "commenttable")
-                      )
-                    )
-                    
-                  )
-                ))
+          radioButtons(inputId = "p_table", label = "Choose to swap:", 
+                       choices = c("Counts", "Percentages"), selected = "Counts"),
+          
+          
+          verbatimTextOutput(outputId = "distractor.anal")
+          #  dataTableOutput(outputId = "distractor.anal")
+        ),
+        tabPanel(
+          "Item Writer Report",
+          hr(),
+          tags$br(),
+          verbatimTextOutput(outputId = "commenttable")
+          #  dataTableOutput(outputId = "commenttable")
+        )
+      )
+      
+    )
+  ))
 ##########SERVER####################################################################
 server <- function(input, output) {
   options(shiny.sanitize.errors = TRUE)
@@ -624,7 +627,7 @@ server <- function(input, output) {
   #item analysis:
   output$item.anal <- renderDataTable({    
     if (is.null(input$file1))
-    return(NULL)
+      return(NULL)
     item_stats <- main_function(
       datapath = input$file1$datapath,
       input$part1,
@@ -716,7 +719,7 @@ server <- function(input, output) {
   })
   
   # discrimination and difficulty comment table
-    output$commenttable <- renderPrint({
+  output$commenttable <- renderPrint({
     validate(need(try(input$file1 != "")
                   , "Please upload your data to see the output"))
     mycommenttable <-
@@ -734,6 +737,27 @@ server <- function(input, output) {
         p_table = input$p_table
       )
     print(mycommenttable)
+  })
+  
+  #DD plot:
+    output$DD_plot <- renderPlot({
+    if (is.null(input$file1))
+      return(NULL)
+    scored_response_set <- main_function(
+      datapath = input$file1$datapath,
+      input$part1,
+      input$part2,
+      input$part3,
+      input$part4,
+      input$max_score_part1,
+      input$max_score_part2,
+      input$max_score_part3,
+      input$max_score_part4,
+      5,
+      p_table = input$p_table
+    )
+    item_dd_plot <- DDplot(scored_response_set, discrim = 'RIR', thr=0.2)
+    print(item_dd_plot)
   })
 }
 ######################OUTPUT#######################################################
